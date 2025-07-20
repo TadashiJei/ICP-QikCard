@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "canisters": {
+    "auth_canister": {
+      "type": "rust",
+      "package": "auth_canister",
+      "candid": "backend/auth_canister/auth_canister.did"
+    },
+    "event_canister": {
+      "type": "rust",
+      "package": "event_canister", 
+      "candid": "backend/event_canister/event_canister.did"
+    },
+    "nft_canister": {
+      "type": "rust",
+      "package": "nft_canister",
+      "candid": "backend/nft_canister/nft_canister.did"
+    },
+    "profile_canister": {
+      "type": "rust",
+      "package": "profile_canister",
+      "candid": "backend/profile_canister/profile_canister.did"
+    },
+    "analytics_canister": {
+      "type": "rust",
+      "package": "analytics_canister",
+      "candid": "backend/analytics_canister/analytics_canister.did"
+    },
+    "wallet_canister": {
+      "type": "rust",
+      "package": "wallet_canister",
+      "candid": "backend/wallet_canister/wallet_canister.did"
+    },
+    "frontend": {
+      "type": "assets",
+      "source": ["frontend/out/"],
+      "dependencies": ["auth_canister", "event_canister"]
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://mainnet.dfinity.network"],
+      "type": "persistent"
+    },
+    "playground": {
+      "providers": ["https://playground.dfinity.network"],
+      "type": "playground"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "replica": {
+    "subnet_type": "application"
+  }
+}

@@ -1,0 +1,118 @@
+# Dependencies
+node_modules/
+*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+/frontend/out/
+/frontend/build/
+/frontend/.next/
+/qikhub/build/
+/qikhub/dist/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# DFX
+.dfx/
+canister_ids.json
+.vessel/
+
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Hardware development
+hardware/**/*.hex
+hardware/**/*.bin
+hardware/**/*.elf
+hardware/**/build/
+
+# Test artifacts
+test-results/
+coverage-report/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Keys and certificates (NEVER commit these)
+keys/
+certificates/
+*.key
+*.pem
+*.crt
+*.p12
+
+# Deployment artifacts
+deployment-history/
+backup/
+
+# Documentation builds
+docs/build/
+
+# Package managers
+.pnpm-store/
+.yarn/
+yarn.lock
+package-lock.json
+
+# Local configuration
+local.json
+config/local.json
+
+# Error logs
+error.log
+debug.log
+
+# Cache
+.cache/
+.parcel-cache/
