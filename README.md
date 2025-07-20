@@ -57,7 +57,7 @@ QikCard Platform
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/icp-qikcard.git
+git clone https://github.com/tadashijei/icp-qikcard.git
 cd icp-qikcard
 
 # Install dependencies
