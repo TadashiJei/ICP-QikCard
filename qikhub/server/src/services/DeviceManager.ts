@@ -293,9 +293,9 @@ export class DeviceManager {
     });
 
     const totalCheckIns = checkIns.length;
-    const uniqueParticipants = new Set(checkIns.map(ci => ci.participantId)).size;
+    const uniqueParticipants = new Set(checkIns.map((ci: { participantId: string }) => ci.participantId)).size;
     const averageProcessingTime = totalCheckIns > 0 ? 
-      checkIns.reduce((acc, ci) => acc + (ci.metadata?.processingTime || 0), 0) / totalCheckIns : 0;
+      checkIns.reduce((acc: number, ci: { metadata?: { processingTime?: number } }) => acc + (ci.metadata?.processingTime || 0), 0) / totalCheckIns : 0;
 
     return {
       deviceId,
@@ -327,3 +327,5 @@ export class DeviceManager {
     return process.env.DEVICE_ENDPOINT || null;
   }
 }
+
+export default DeviceManager;

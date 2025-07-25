@@ -13,91 +13,104 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateToken = async (
+interface JwtPayload {
+  userId: string;
+  email?: string;
+  [key: string]: any;
+}
+
+const authenticateToken = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ error: 'Access token required' });
+      res.status(401).json({ error: 'Access token required' });
+      return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; email: string };
     
-    // Verify user exists and is active
+    // Fetch user from database
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: decoded.userId || decoded.id },
       select: {
         id: true,
-        principalId: true,
         email: true,
+        name: true,
         role: true,
-        isActive: true
-      }
+      },
     });
 
-    if (!user || !user.isActive) {
-      return res.status(401).json({ error: 'Invalid or inactive user' });
+    if (!user) {
+      res.status(401).json({ error: 'Invalid token' });
+      return;
     }
 
     req.user = user;
     next();
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(403).json({ error: 'Invalid token' });
-    }
-    return res.status(500).json({ error: 'Authentication error' });
+    res.status(403).json({ error: 'Invalid token' });
+    return;
   }
 };
 
-export const requireRole = (roles: string[]) => {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const requireRole = (roles: string[]) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
-      return res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: 'Authentication required' });
+      return;
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ error: 'Insufficient permissions' });
+      res.status(403).json({ error: 'Insufficient permissions' });
+      return;
     }
 
     next();
   };
 };
 
-export const optionalAuth = async (
+const optionalAuth = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.userId },
-        select: {
-          id: true,
-          principalId: true,
-          email: true,
-          role: true,
-          isActive: true
-        }
-      });
+    if (!token) {
+      next();
+      return;
+    }
 
-      if (user && user.isActive) {
-        req.user = user;
-      }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; email: string };
+    
+    // Fetch user from database
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId || decoded.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
+
+    if (user) {
+      req.user = user;
     }
 
     next();
   } catch (error) {
-    // Continue without authentication for optional endpoints
+    // If token is invalid, just continue without user
     next();
   }
 };
+
+export { authenticateToken, requireRole, optionalAuth };

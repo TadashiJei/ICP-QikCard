@@ -22,10 +22,10 @@ import { authenticateToken } from './middleware/auth';
 import { validateRequest } from './middleware/validation';
 
 // Import services
-import { DeviceManager } from './services/DeviceManager';
-import { AnalyticsEngine } from './services/AnalyticsEngine';
-import { NotificationService } from './services/NotificationService';
-import { ICPIntegration } from './services/ICPIntegration';
+import DeviceManager from './services/DeviceManager';
+import AnalyticsEngine from './services/AnalyticsEngine';
+import NotificationService from './services/NotificationService';
+import ICPIntegration from './services/ICPIntegration';
 
 dotenv.config();
 
@@ -138,10 +138,12 @@ io.on('connection', (socket) => {
   });
   
   // Handle device status updates
-  socket.on('device-status', async (data: { deviceId: string, status: any }) => {
+  socket.on('device-status', async (data: { deviceId: string, status: any, eventId?: string }) => {
     try {
       await deviceManager.updateDeviceStatus(data.deviceId, data.status);
-      io.to(`event-${data.eventId}`).emit('device-status-updated', data);
+      if (data.eventId) {
+        io.to(`event-${data.eventId}`).emit('device-status-updated', data);
+      }
     } catch (error) {
       logger.error('Failed to update device status', error);
       socket.emit('error', { message: 'Failed to update device status' });
