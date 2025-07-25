@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://qikcard.com"),
+  metadataBase: new URL("https://theqikcard.com"),
   title: {
     default: "QikCard - Web3 Event Pass, Digital Identity & ICP Hardwallet | Connect, Share, Grow",
     template: "%s | QikCard - Web3 Event Platform",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://qikcard.com",
+    url: "https://theqikcard.com",
     siteName: "QikCard",
     title: "QikCard - Your All-in-One Web3 Event Pass, Digital Identity & ICP Hardwallet",
     description:
@@ -88,9 +88,9 @@ export const metadata: Metadata = {
     yahoo: "your-yahoo-verification-code",
   },
   alternates: {
-    canonical: "https://qikcard.com",
+    canonical: "https://theqikcard.com",
     languages: {
-      "en-US": "https://qikcard.com",
+      "en-US": "https://theqikcard.com",
     },
   },
   category: "technology",
@@ -159,8 +159,8 @@ export default function RootLayout({
               "@type": "Organization",
               name: "QikCard",
               description: "Web3 Event Platform with Digital Identity and ICP Hardwallet",
-              url: "https://qikcard.com",
-              logo: "https://qikcard.com/MetaSEO-Image.png",
+              url: "https://theqikcard.com",
+              logo: "https://theqikcard.com/MetaSEO-Image.png",
               sameAs: [
                 "https://twitter.com/QikCard",
                 "https://discord.gg/qikcard",
@@ -172,7 +172,7 @@ export default function RootLayout({
                 "@type": "ContactPoint",
                 telephone: "+63-991-009-7448",
                 contactType: "customer service",
-                email: "support@qikcard.com",
+                email: "support@theqikcard.com",
               },
               address: {
                 "@type": "PostalAddress",
@@ -199,8 +199,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* DNS Prefetch */}
-        <link rel="dns-prefetch" href="//api.qikcard.com" />
-        <link rel="dns-prefetch" href="//cdn.qikcard.com" />
+        <link rel="dns-prefetch" href="//api.theqikcard.com" />
+        <link rel="dns-prefetch" href="//cdn.theqikcard.com" />
       </head>
       <body className={`${inter.className} antialiased`}>
         {children}

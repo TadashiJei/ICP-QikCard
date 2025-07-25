@@ -23,10 +23,10 @@ export default function LandingPage() {
             "@type": "WebSite",
             name: "QikCard",
             description: "Web3 Event Platform with Digital Identity and ICP Hardwallet",
-            url: "https://qikcard.com",
+            url: "https://theqikcard.com",
             potentialAction: {
               "@type": "SearchAction",
-              target: "https://qikcard.com/search?q={search_term_string}",
+              target: "https://theqikcard.com/search?q={search_term_string}",
               "query-input": "required name=search_term_string",
             },
             mainEntity: {

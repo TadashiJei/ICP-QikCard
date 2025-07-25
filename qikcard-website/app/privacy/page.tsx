@@ -231,13 +231,13 @@ export default function PrivacyPage() {
                     </p>
                     <div className="space-y-2">
                       <p>
-                        <strong>Email:</strong> privacy@qikcard.com
+                        <strong>Email:</strong> privacy@theqikcard.com
                       </p>
                       <p>
                         <strong>Address:</strong> QikCard Inc., NCR, Philippines
                       </p>
                       <p>
-                        <strong>Data Protection Officer:</strong> dpo@qikcard.com
+                        <strong>Data Protection Officer:</strong> dpo@theqikcard.com
                       </p>
                     </div>
                   </div>

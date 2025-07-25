@@ -98,7 +98,7 @@ event = client.events.create({
 print(f"Event created: {event.id}")`,
 
   curl: `# Create an event using cURL
-curl -X POST https://api.qikcard.com/v1/events \\
+curl -X POST https://api.theqikcard.com/v1/events \\
   -H "Authorization: Bearer qk_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -174,7 +174,7 @@ export default function APIReferencePage() {
               <CardHeader>
                 <Globe className="h-10 w-10 text-blue-400 mb-4" />
                 <CardTitle className="text-white text-xl">Base URL</CardTitle>
-                <CardDescription className="text-white/70">https://api.qikcard.com/v1</CardDescription>
+                <CardDescription className="text-white/70">https://api.theqikcard.com/v1</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-white/10 border-white/20 backdrop-blur-sm">

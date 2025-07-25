@@ -387,7 +387,7 @@ NODE_ENV=production
 DATABASE_URL=postgresql://user:pass@localhost:5432/qikhub
 JWT_SECRET=your-secret-key
 REDIS_URL=redis://localhost:6379
-MQTT_BROKER_URL=mqtt://broker.qikcard.com
+MQTT_BROKER_URL=mqtt://broker.theqikcard.com
 ICP_CANISTER_ENDPOINT=https://ic0.app
 ```
 

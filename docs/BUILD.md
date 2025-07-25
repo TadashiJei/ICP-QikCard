@@ -204,7 +204,7 @@ pio device monitor
 #define NFC_I2C_ADDRESS 0x24
 #define WIFI_SSID "your_wifi_ssid"
 #define WIFI_PASSWORD "your_wifi_password"
-#define API_ENDPOINT "https://qikcard.com/api"
+#define API_ENDPOINT "https://theqikcard.com/api"
 ```
 
 ## Testing
@@ -272,7 +272,7 @@ dfx deploy --network ic --with-cycles 1000000000000
 dfx canister call auth_canister setEnvironment '("production")' --network ic
 
 # Configure HTTPS endpoints
-dfx canister call event_canister setApiEndpoint '("https://api.qikcard.com")' --network ic
+dfx canister call event_canister setApiEndpoint '("https://api.theqikcard.com")' --network ic
 ```
 
 ### Frontend Deployment

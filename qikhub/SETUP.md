@@ -335,4 +335,4 @@ wscat -c ws://localhost:3001
 - **Documentation**: Check docs/ directory
 - **Issues**: Create GitHub issues
 - **Discord**: Join our community server
-- **Email**: support@qikcard.com
+- **Email**: support@theqikcard.com

@@ -139,7 +139,7 @@ export default function BlogPostClient() {
                 <li>
                   • A QikCard developer account (sign up at{" "}
                   <Link href="/developer-guide" className="text-blue-400 hover:text-blue-300">
-                    developer.qikcard.com
+                    developer.theqikcard.com
                   </Link>
                   )
                 </li>
@@ -165,7 +165,7 @@ export default function BlogPostClient() {
                       copyToClipboard(
                         `const QIKCARD_API_KEY = 'your_api_key_here';
 const QIKCARD_SECRET = 'your_secret_here';
-const BASE_URL = 'https://api.qikcard.com/v1';`,
+const BASE_URL = 'https://api.theqikcard.com/v1';`,
                         "setup",
                       )
                     }
@@ -178,7 +178,7 @@ const BASE_URL = 'https://api.qikcard.com/v1';`,
                 <pre className="text-white/90 text-sm overflow-x-auto">
                   {`const QIKCARD_API_KEY = 'your_api_key_here';
 const QIKCARD_SECRET = 'your_secret_here';
-const BASE_URL = 'https://api.qikcard.com/v1';`}
+const BASE_URL = 'https://api.theqikcard.com/v1';`}
                 </pre>
               </div>
 

@@ -16,7 +16,7 @@ export const metadata = {
     "blockchain development",
     "smart contract integration",
   ],
-  authors: [{ name: "Sarah Rodriguez", url: "https://qikcard.com/team/sarah-rodriguez" }],
+  authors: [{ name: "Sarah Rodriguez", url: "https://theqikcard.com/team/sarah-rodriguez" }],
   openGraph: {
     title: "Building Your First QikCard Integration: Developer Tutorial",
     description:
@@ -29,7 +29,7 @@ export const metadata = {
         alt: "QikCard API Integration Tutorial",
       },
     ],
-    url: "https://qikcard.com/blog/building-first-qikcard-integration",
+    url: "https://theqikcard.com/blog/building-first-qikcard-integration",
     type: "article",
     publishedTime: "2025-01-12T00:00:00.000Z",
     authors: ["Sarah Rodriguez"],
@@ -42,7 +42,7 @@ export const metadata = {
     creator: "@QikCard",
   },
   alternates: {
-    canonical: "https://qikcard.com/blog/building-first-qikcard-integration",
+    canonical: "https://theqikcard.com/blog/building-first-qikcard-integration",
   },
 }
 
@@ -61,7 +61,7 @@ export default function BlogPost() {
             headline: "Building Your First QikCard Integration: A Step-by-Step Guide",
             description:
               "Learn how to integrate QikCard into your event platform with our comprehensive developer tutorial and code examples.",
-            image: "https://qikcard.com/MetaSEO-Image.png",
+            image: "https://theqikcard.com/MetaSEO-Image.png",
             author: {
               "@type": "Person",
               name: "Sarah Rodriguez",
@@ -76,14 +76,14 @@ export default function BlogPost() {
               name: "QikCard",
               logo: {
                 "@type": "ImageObject",
-                url: "https://qikcard.com/MetaSEO-Image.png",
+                url: "https://theqikcard.com/MetaSEO-Image.png",
               },
             },
             datePublished: "2025-01-12T00:00:00.000Z",
             dateModified: "2025-01-12T00:00:00.000Z",
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": "https://qikcard.com/blog/building-first-qikcard-integration",
+              "@id": "https://theqikcard.com/blog/building-first-qikcard-integration",
             },
             keywords: "QikCard API, Web3 integration, Developer tutorial, Blockchain development",
             articleSection: "Developer Tutorial",

@@ -310,7 +310,7 @@ QikCard Platform's future is built on continuous innovation, strategic partnersh
 
 **Join us in building the future of events.**
 
-*Ready to be part of the QikCard revolution? Contact our team at future@qikcard.com*
+*Ready to be part of the QikCard revolution? Contact our team at future@theqikcard.com*
 
 ---
 

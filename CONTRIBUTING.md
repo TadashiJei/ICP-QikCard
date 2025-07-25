@@ -362,7 +362,7 @@ If you have ideas about how this could be implemented, please share them.
 ### Getting Help
 - **Discord**: Join our [Discord server](https://discord.gg/qikcard) for real-time help
 - **GitHub Discussions**: Use [GitHub Discussions](https://github.com/qikcard/icp-qikcard/discussions) for longer conversations
-- **Email**: Contact us at contributors@qikcard.com for private inquiries
+- **Email**: Contact us at contributors@theqikcard.com for private inquiries
 
 ### Code of Conduct
 Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.

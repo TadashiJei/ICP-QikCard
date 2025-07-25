@@ -1,7 +1,7 @@
 # QikCard Platform — Official Experience Provider for WCHL 2025
 
 [![ICP](https://img.shields.io/badge/ICP-Powered-blue)](https://internetcomputer.org/)
-[![WCHL2025](https://img.shields.io/badge/WCHL-2025-green)](https://qikcard.com)
+[![WCHL2025](https://img.shields.io/badge/WCHL-2025-green)](https://theqikcard.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **QikCard Experience** — Your All-in-One Event Pass, Digital Identity, and ICP Hardwallet
@@ -101,7 +101,7 @@ This project addresses all judging criteria:
 
 ## Live Demo
 
-- **Website**: [qikcard.com](https://qikcard.com)
+- **Website**: [theqikcard.com](https://theqikcard.com)
 - **Mainnet Canister ID**: `rdmx6-jaaaa-aaaah-qcaiq-cai`
 - **Demo Video**: [Watch Demo](https://youtu.be/demo-link)
 
@@ -125,8 +125,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 ## Contact
 
 - **Team**: QikCard Development Team
-- **Website**: [qikcard.com](https://qikcard.com)
-- **Email**: team@qikcard.com
+- **Website**: [theqikcard.com](https://theqikcard.com)
+- **Email**: team@theqikcard.com
 
 ---
 

@@ -250,8 +250,8 @@ npm run test:coverage
 ### Support Resources
 - **GitHub Issues**: Bug reports and feature requests
 - **Discord Community**: Real-time support
-- **Email Support**: support@qikcard.com
-- **Documentation**: docs.qikcard.com
+- **Email Support**: support@theqikcard.com
+- **Documentation**: docs.theqikcard.com
 
 ## 🎯 Ready for Production
 

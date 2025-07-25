@@ -267,7 +267,7 @@ export default function TermsPage() {
                   arbitration in NCR, Philippines.
                 </p>
                 <p>
-                  For questions about these Terms, contact us at: <strong>legal@qikcard.com</strong>
+                  For questions about these Terms, contact us at: <strong>legal@theqikcard.com</strong>
                 </p>
               </div>
             </CardContent>

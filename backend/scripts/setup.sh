@@ -237,14 +237,14 @@ cat > test-data/fixtures/users.json << EOF
     "principal": "2vxsx-fae",
     "username": "admin",
     "display_name": "Admin User",
-    "email": "admin@qikcard.com",
+    "email": "admin@theqikcard.com",
     "role": "admin"
   },
   {
     "principal": "2vxsx-fae",
     "username": "organizer",
     "display_name": "Event Organizer",
-    "email": "organizer@qikcard.com",
+    "email": "organizer@theqikcard.com",
     "role": "organizer"
   },
   {
