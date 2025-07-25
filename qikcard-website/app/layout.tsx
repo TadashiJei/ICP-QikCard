@@ -139,7 +139,8 @@ export const metadata: Metadata = {
     "reddit:card": "summary_large_image",
     // GitHub specific
     "github:card": "summary_large_image",
-  },'
+  },
+
 }
 
 export default function RootLayout({

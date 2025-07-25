@@ -274,7 +274,7 @@ npm run analyze
 NEXT_PUBLIC_DFX_NETWORK=ic
 NEXT_PUBLIC_CANISTER_ID_AUTH=rdmx6-jaaaa-aaaah-qcaiq-cai
 NEXT_PUBLIC_CANISTER_ID_EVENT=rrkah-fqaaa-aaaah-qcaiq-cai
-NEXT_PUBLIC_API_BASE_URL=https://api.theqikcard.com
+NEXT_PUBLIC_API_BASE_URL=https://api.thetheqikcard.com
 ```
 
 ### ICP Asset Canister Deployment

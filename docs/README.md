@@ -55,10 +55,10 @@ All documentation is structured to address the WCHL 2025 judging criteria:
 
 ## Quick Links
 
-- **Live Demo**: [theqikcard.com](https://theqikcard.com)
+- **Live Demo**: [thetheqikcard.com](https://thetheqikcard.com)
 - **Mainnet Canister**: `rdmx6-jaaaa-aaaah-qcaiq-cai`
 - **GitHub Repository**: [github.com/qikcard/icp-qikcard](https://github.com/qikcard/icp-qikcard)
 
 ---
 
-*For questions or support, contact the QikCard development team at team@theqikcard.com*
+*For questions or support, contact the QikCard development team at team@thetheqikcard.com*

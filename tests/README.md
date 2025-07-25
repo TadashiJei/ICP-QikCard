@@ -217,7 +217,7 @@ export let options = {
 };
 
 export default function() {
-  let response = http.get('https://api.theqikcard.com/events');
+  let response = http.get('https://api.thetheqikcard.com/events');
   
   check(response, {
     'status is 200': (r) => r.status === 200,

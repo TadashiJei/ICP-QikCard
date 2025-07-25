@@ -78,7 +78,7 @@ dfx deploy --network ic --with-cycles 10000000000000
 # Update canister settings
 echo "Configuring production settings..."
 dfx canister call auth_canister setEnvironment '("production")' --network ic
-dfx canister call event_canister setApiEndpoint '("https://api.theqikcard.com")' --network ic
+dfx canister call event_canister setApiEndpoint '("https://api.thetheqikcard.com")' --network ic
 
 # Verify deployment
 echo "Verifying deployment..."
@@ -213,7 +213,7 @@ echo "Firmware flashed successfully to $DEVICE_PORT"
 #!/bin/bash
 # scripts/monitoring/health-check.sh
 
-API_BASE_URL=${API_BASE_URL:-"https://api.theqikcard.com"}
+API_BASE_URL=${API_BASE_URL:-"https://api.thetheqikcard.com"}
 WEBHOOK_URL=${WEBHOOK_URL:-""}
 
 check_endpoint() {
@@ -455,7 +455,7 @@ export DATABASE_URL=postgresql://user:pass@host:port/db
 
 # Required for monitoring
 export WEBHOOK_URL=https://hooks.slack.com/your-webhook
-export API_BASE_URL=https://api.theqikcard.com
+export API_BASE_URL=https://api.thetheqikcard.com
 ```
 
 ---
