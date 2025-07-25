@@ -2,15 +2,11 @@ import { body, validationResult, Result, ValidationError } from 'express-validat
 import { Request, Response, NextFunction } from 'express';
 
 export const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
-  const errors: Result<ValidationError> = validationResult(req);
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
-      success: false,
-      errors: errors.array().map(err => ({
-        field: err.type === 'field' ? err.path : err.type,
-        message: err.msg,
-        value: err.value,
-      })),
+      error: 'Validation failed',
+      details: errors.array(),
     });
     return;
   }

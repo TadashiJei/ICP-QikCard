@@ -1,0 +1,44 @@
+{
+  "name": "QikCard - Web3 Event Pass, Digital Identity & ICP Hardwallet",
+  "short_name": "QikCard",
+  "description": "Transform events with Web3 technology. Earn digital collectibles, build your crypto portfolio, and network in the QikCommunity.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "social", "utilities"],
+  "lang": "en-US",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/MetaSEO-Image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/MetaSEO-Image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
