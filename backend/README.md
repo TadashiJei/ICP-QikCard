@@ -1,8 +1,357 @@
-# QikCard Backend Canisters
+# QikCard Backend
 
-## Overview
+This directory contains the backend implementation for the QikCard platform, built on the Internet Computer Protocol (ICP) using Motoko and Rust.
 
-The QikCard backend consists of six specialized ICP canisters that handle authentication, event management, NFT operations, user profiles, analytics, and wallet functionality. Built with Rust for performance and security.
+## Architecture Overview
+
+The backend consists of six specialized canisters, each serving a specific purpose:
+
+### Canisters
+
+1. **Authentication Canister** (`auth/`) - User authentication and session management
+2. **Event Canister** (`event/`) - Event lifecycle management and QikPoint scanner integration
+3. **NFT Canister** (`nft/`) - NFT minting, metadata management, and rewards
+4. **Profile Canister** (`profile/`) - User profile management and social features
+5. **Analytics Canister** (`analytics/`) - Event data collection and reporting
+6. **Wallet Canister** (`wallet/`) - Cryptocurrency wallet management with multi-currency support
+
+## Quick Start
+
+### Prerequisites
+
+- [DFINITY SDK](https://internetcomputer.org/docs/current/developer-docs/setup/install/) (dfx)
+- [Node.js 18+](https://nodejs.org/) (for frontend development)
+- [Rust 1.70+](https://rust-lang.org/) (for wallet canister)
+- [Motoko compiler](https://internetcomputer.org/docs/current/motoko/main/getting-started)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/TadashiJei/ICP-QikCard.git
+cd ICP-QikCard/backend
+```
+
+2. Install dependencies:
+```bash
+# Install Rust dependencies
+cd canisters/wallet
+cargo check
+cd ../..
+
+# Make scripts executable
+chmod +x scripts/*.sh
+```
+
+3. Start local development:
+```bash
+# Start local replica
+dfx start --background
+
+# Deploy all canisters
+dfx deploy
+
+# Run tests
+./scripts/test.sh
+```
+
+## Development Workflow
+
+### Local Development
+
+1. **Start the local replica**:
+   ```bash
+   dfx start --background --clean
+   ```
+
+2. **Build and deploy**:
+   ```bash
+   ./scripts/build.sh
+   ./scripts/deploy.sh --network local
+   ```
+
+3. **Test the APIs**:
+   ```bash
+   # Register a user
+   dfx canister call auth registerUser '("John Doe", "john@example.com")'
+
+   # Create an event
+   dfx canister call event createEvent '("Tech Meetup", "Web3 networking event", "San Francisco", 1234567890, 1234567890, 100)'
+
+   # Check user balance
+   dfx canister call wallet balance '(principal "$(dfx identity get-principal)", "ICP")'
+   ```
+
+### Mainnet Deployment
+
+1. **Configure mainnet**:
+   ```bash
+   # Set up cycles wallet
+   dfx identity --network ic deploy-wallet <cycles-wallet-id>
+   
+   # Deploy to mainnet
+   ./scripts/deploy.sh --network ic
+   ```
+
+2. **Verify deployment**:
+   ```bash
+   dfx canister --network ic status --all
+   ```
+
+## API Documentation
+
+For detailed API documentation, see:
+- [API.md](API.md) - Complete API reference
+- [CANISTERS.md](CANISTERS.md) - Canister-specific documentation
+- [ARCHITECTURE.md](ARCHITECTURE.md) - System architecture overview
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+./scripts/test.sh
+
+# Run specific test categories
+./scripts/test.sh --verbose
+./scripts/test.sh --skip-build
+
+# Run tests on mainnet (use with caution)
+./scripts/test.sh --network ic
+```
+
+### Test Coverage
+
+The test suite covers:
+- **Unit Tests**: Individual function testing
+- **Integration Tests**: Inter-canister communication
+- **Security Tests**: Access control and validation
+- **Performance Tests**: Load and stress testing
+- **End-to-End Tests**: Complete user workflows
+
+## Scripts
+
+### Available Scripts
+
+- `scripts/build.sh` - Build all canisters
+- `scripts/deploy.sh` - Deploy to local or mainnet
+- `scripts/test.sh` - Run comprehensive test suite
+- `scripts/setup.sh` - Initial environment setup
+- `scripts/clean.sh` - Clean build artifacts
+
+### Script Usage
+
+```bash
+# Build all canisters
+./scripts/build.sh
+
+# Deploy to local network
+./scripts/deploy.sh --network local
+
+# Deploy to mainnet with confirmation
+./scripts/deploy.sh --network ic
+
+# Run tests with verbose output
+./scripts/test.sh --verbose
+```
+
+## Configuration
+
+### dfx.json
+
+The `dfx.json` file configures all canisters:
+
+```json
+{
+  "canisters": {
+    "auth": {
+      "main": "canisters/auth/src/main.mo",
+      "type": "motoko"
+    },
+    "event": {
+      "main": "canisters/event/src/main.mo",
+      "type": "motoko"
+    },
+    "nft": {
+      "main": "canisters/nft/src/main.mo",
+      "type": "motoko"
+    },
+    "profile": {
+      "main": "canisters/profile/src/main.mo",
+      "type": "motoko"
+    },
+    "analytics": {
+      "main": "canisters/analytics/src/main.mo",
+      "type": "motoko"
+    },
+    "wallet": {
+      "main": "canisters/wallet/src/lib.rs",
+      "type": "rust"
+    }
+  }
+}
+```
+
+### Environment Variables
+
+Create a `.env` file for local development:
+
+```bash
+# Network configuration
+NETWORK=local
+
+# Canister IDs (auto-generated after deployment)
+AUTH_CANISTER_ID=ryjl3-tyaaa-aaaaa-aaaba-cai
+EVENT_CANISTER_ID=ryjl3-tyaaa-aaaaa-aaaba-cai
+NFT_CANISTER_ID=ryjl3-tyaaa-aaaaa-aaaba-cai
+PROFILE_CANISTER_ID=ryjl3-tyaaa-aaaaa-aaaba-cai
+ANALYTICS_CANISTER_ID=ryjl3-tyaaa-aaaaa-aaaba-cai
+WALLET_CANISTER_ID=ryjl3-tyaaa-aaaaa-aaaba-cai
+
+# Frontend URLs
+FRONTEND_URL=http://localhost:3000
+BACKEND_URL=http://localhost:8000
+```
+
+## Security
+
+### Authentication
+- Internet Identity integration for secure authentication
+- Session management with configurable expiration
+- Role-based access control (RBAC)
+- Principal-based user identification
+
+### Data Protection
+- Encrypted storage for sensitive data
+- Secure key management in wallet canister
+- Input validation and sanitization
+- Rate limiting and DDoS protection
+
+### Access Control
+- Granular permissions system
+- Canister-level access restrictions
+- API endpoint authentication
+- Audit trail maintenance
+
+## Monitoring
+
+### Metrics Collection
+- Canister performance metrics
+- User activity tracking
+- Error rate monitoring
+- Resource utilization
+
+### Logging
+- Structured logging across all canisters
+- Centralized log aggregation
+- Real-time alerting
+- Audit trail maintenance
+
+## Deployment
+
+### Local Development
+```bash
+# Start local replica
+dfx start --background
+
+# Deploy all canisters
+dfx deploy
+
+# Check deployment status
+dfx canister status --all
+```
+
+### Production Deployment
+```bash
+# Build for production
+./scripts/build.sh
+
+# Deploy to mainnet
+./scripts/deploy.sh --network ic
+
+# Verify deployment
+dfx canister --network ic status --all
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Build failures**:
+   ```bash
+   # Clean and rebuild
+   dfx clean
+   ./scripts/build.sh
+   ```
+
+2. **Deployment issues**:
+   ```bash
+   # Check network connectivity
+   dfx ping
+   
+   # Check canister status
+   dfx canister status --all
+   ```
+
+3. **Authentication issues**:
+   ```bash
+   # Reset identity
+   dfx identity new test
+   dfx identity use test
+   ```
+
+### Debug Commands
+
+```bash
+# View canister logs
+dfx canister logs --follow auth
+
+# Check canister cycles
+dfx canister status auth
+
+# Inspect canister state
+dfx canister call auth getUser '(principal "ryjl3-tyaaa-aaaaa-aaaba-cai")'
+```
+
+## Contributing
+
+### Development Setup
+
+1. **Fork the repository**
+2. **Create feature branch**:
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+3. **Make changes and test**:
+   ```bash
+   ./scripts/test.sh
+   ```
+4. **Submit pull request**
+
+### Code Style
+
+- Follow Motoko and Rust best practices
+- Use descriptive variable names
+- Add comprehensive tests
+- Document all public APIs
+- No emojis in commit messages
+
+## Resources
+
+### Documentation
+- [ICP Developer Docs](https://internetcomputer.org/docs/)
+- [Motoko Language Guide](https://internetcomputer.org/docs/current/motoko/main/getting-started)
+- [Rust CDK Documentation](https://docs.rs/ic-cdk/)
+
+### Community
+- [DFINITY Developer Forum](https://forum.dfinity.org/)
+- [ICP Discord](https://discord.gg/internetcomputer)
+- [GitHub Issues](https://github.com/TadashiJei/ICP-QikCard/issues)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
 
 ## Canister Architecture
 

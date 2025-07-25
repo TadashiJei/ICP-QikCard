@@ -1,0 +1,46 @@
+{
+  "canisters": {
+    "auth": {
+      "main": "canisters/auth/src/main.mo",
+      "type": "motoko"
+    },
+    "event": {
+      "main": "canisters/event/src/main.mo",
+      "type": "motoko"
+    },
+    "nft": {
+      "main": "canisters/nft/src/main.mo",
+      "type": "motoko"
+    },
+    "profile": {
+      "main": "canisters/profile/src/main.mo",
+      "type": "motoko"
+    },
+    "analytics": {
+      "main": "canisters/analytics/src/main.mo",
+      "type": "motoko"
+    },
+    "wallet": {
+      "main": "canisters/wallet/src/main.rs",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "dfx": "0.15.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://icp0.io"],
+      "type": "persistent"
+    }
+  },
+  "version": 1
+}
