@@ -1,0 +1,184 @@
+// Profile Canister Interface
+// Manages user profiles, preferences, and reputation system
+
+type UserId = principal;
+type Timestamp = nat64;
+type ProfileId = nat64;
+
+type ProfileStatus = variant {
+  Active;
+  Suspended;
+  Deleted;
+};
+
+type Profile = record {
+  id: ProfileId;
+  user_id: UserId;
+  display_name: text;
+  bio: opt text;
+  avatar_url: opt text;
+  social_links: vec record { text; text };
+  preferences: UserPreferences;
+  reputation: Reputation;
+  stats: UserStats;
+  status: ProfileStatus;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  metadata: opt blob;
+};
+
+type UserPreferences = record {
+  language: text;
+  timezone: text;
+  email_notifications: bool;
+  push_notifications: bool;
+  event_notifications: bool;
+  nft_notifications: bool;
+  privacy_level: PrivacyLevel;
+  theme: Theme;
+};
+
+type PrivacyLevel = variant {
+  Public;
+  Friends;
+  Private;
+};
+
+type Theme = variant {
+  Light;
+  Dark;
+  Auto;
+};
+
+type Reputation = record {
+  total_points: nat64;
+  level: ReputationLevel;
+  badges_earned: nat32;
+  events_attended: nat32;
+  events_organized: nat32;
+  contributions: nat32;
+  streak_days: nat32;
+};
+
+type ReputationLevel = variant {
+  Newcomer;
+  Explorer;
+  Contributor;
+  Expert;
+  Master;
+  Legend;
+};
+
+type UserStats = record {
+  total_events_attended: nat32;
+  total_events_organized: nat32;
+  total_nfts_owned: nat32;
+  total_badges_earned: nat32;
+  first_event_date: opt Timestamp;
+  last_activity_date: opt Timestamp;
+};
+
+type ProfileError = variant {
+  ProfileNotFound;
+  Unauthorized;
+  InvalidDisplayName;
+  InvalidBio;
+  InvalidSocialLink;
+  ProfileAlreadyExists;
+  ProfileSuspended;
+};
+
+type CreateProfileRequest = record {
+  display_name: text;
+  bio: opt text;
+  avatar_url: opt text;
+  social_links: vec record { text; text };
+};
+
+type UpdateProfileRequest = record {
+  display_name: opt text;
+  bio: opt text;
+  avatar_url: opt text;
+  social_links: opt vec record { text; text };
+  preferences: opt UserPreferences;
+};
+
+type UpdatePreferencesRequest = record {
+  language: opt text;
+  timezone: opt text;
+  email_notifications: opt bool;
+  push_notifications: opt bool;
+  event_notifications: opt bool;
+  nft_notifications: opt bool;
+  privacy_level: opt PrivacyLevel;
+  theme: opt Theme;
+};
+
+type ReputationUpdate = record {
+  points: int64;
+  action: text;
+  event_id: opt nat64;
+};
+
+type ProfileListResponse = record {
+  profiles: vec Profile;
+  total_count: nat64;
+  has_more: bool;
+};
+
+type LeaderboardEntry = record {
+  user_id: UserId;
+  display_name: text;
+  reputation: Reputation;
+  rank: nat32;
+};
+
+type LeaderboardResponse = record {
+  entries: vec LeaderboardEntry;
+  total_count: nat64;
+  last_updated: Timestamp;
+};
+
+// Public API Methods
+service : {
+  // Profile Management
+  create_profile: (CreateProfileRequest) -> (variant { Ok: Profile; Err: ProfileError });
+  get_profile: (UserId) -> (variant { Ok: Profile; Err: ProfileError }) query;
+  get_profile_by_id: (ProfileId) -> (variant { Ok: Profile; Err: ProfileError }) query;
+  update_profile: (UpdateProfileRequest) -> (variant { Ok: Profile; Err: ProfileError });
+  delete_profile: (UserId) -> (variant { Ok: bool; Err: ProfileError });
+  
+  // Preferences Management
+  update_preferences: (UpdatePreferencesRequest) -> (variant { Ok: UserPreferences; Err: ProfileError });
+  get_preferences: (UserId) -> (variant { Ok: UserPreferences; Err: ProfileError }) query;
+  
+  // Reputation System
+  add_reputation_points: (UserId, ReputationUpdate) -> (variant { Ok: Reputation; Err: ProfileError });
+  get_reputation: (UserId) -> (variant { Ok: Reputation; Err: ProfileError }) query;
+  get_reputation_level: (UserId) -> (variant { Ok: ReputationLevel; Err: ProfileError }) query;
+  
+  // Profile Discovery
+  search_profiles: (text, opt nat64, opt nat64) -> (ProfileListResponse) query;
+  get_leaderboard: (opt nat64, opt nat64) -> (LeaderboardResponse) query;
+  get_top_contributors: (nat32) -> (vec LeaderboardEntry) query;
+  
+  // User Stats
+  get_user_stats: (UserId) -> (variant { Ok: UserStats; Err: ProfileError }) query;
+  update_user_stats: (UserId, UserStats) -> (variant { Ok: UserStats; Err: ProfileError });
+  
+  // Social Features
+  follow_user: (UserId, UserId) -> (variant { Ok: bool; Err: ProfileError });
+  unfollow_user: (UserId, UserId) -> (variant { Ok: bool; Err: ProfileError });
+  get_followers: (UserId, opt nat64, opt nat64) -> (ProfileListResponse) query;
+  get_following: (UserId, opt nat64, opt nat64) -> (ProfileListResponse) query;
+  
+  // Profile Verification
+  verify_profile: (UserId) -> (variant { Ok: bool; Err: ProfileError });
+  is_profile_complete: (UserId) -> (variant { Ok: bool; Err: ProfileError }) query;
+  
+  // Batch Operations
+  get_multiple_profiles: (vec UserId) -> (vec Profile) query;
+  
+  // Health Check
+  health_check: () -> (text) query;
+}

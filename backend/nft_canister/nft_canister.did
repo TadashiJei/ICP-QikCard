@@ -1,0 +1,157 @@
+// NFT Canister Interface
+// Manages QikCard NFTs, badges, and achievement tokens
+
+type TokenId = nat64;
+type UserId = principal;
+type Timestamp = nat64;
+
+type TokenStandard = variant {
+  ICRC7;
+  EXT;
+  DIP721;
+};
+
+type TokenType = variant {
+  Badge;
+  Achievement;
+  Membership;
+  EventAttendance;
+  SpecialRecognition;
+};
+
+type TokenMetadata = record {
+  name: text;
+  description: text;
+  image_url: text;
+  attributes: vec record { text; text };
+  token_type: TokenType;
+  rarity: Rarity;
+  event_id: opt nat64;
+  created_at: Timestamp;
+};
+
+type Rarity = variant {
+  Common;
+  Uncommon;
+  Rare;
+  Epic;
+  Legendary;
+  Unique;
+};
+
+type NFT = record {
+  id: TokenId;
+  owner: UserId;
+  metadata: TokenMetadata;
+  minted_at: Timestamp;
+  transfer_count: nat64;
+  is_burned: bool;
+};
+
+type TransferRecord = record {
+  from: UserId;
+  to: UserId;
+  token_id: TokenId;
+  timestamp: Timestamp;
+  memo: opt text;
+};
+
+type NFTError = variant {
+  TokenNotFound;
+  Unauthorized;
+  InvalidToken;
+  AlreadyMinted;
+  TransferFailed;
+  InsufficientBalance;
+  InvalidRecipient;
+  TokenBurned;
+  MaxSupplyReached;
+};
+
+type MintRequest = record {
+  recipient: UserId;
+  metadata: TokenMetadata;
+  quantity: nat32;
+};
+
+type TransferRequest = record {
+  from: UserId;
+  to: UserId;
+  token_id: TokenId;
+  memo: opt text;
+};
+
+type BurnRequest = record {
+  token_id: TokenId;
+  owner: UserId;
+};
+
+type NFTListResponse = record {
+  tokens: vec NFT;
+  total_count: nat64;
+  has_more: bool;
+};
+
+type UserNFTListResponse = record {
+  tokens: vec NFT;
+  total_count: nat64;
+  token_types: vec record { TokenType; nat64 };
+};
+
+type CollectionStats = record {
+  total_supply: nat64;
+  total_minted: nat64;
+  total_burned: nat64;
+  unique_owners: nat64;
+  tokens_by_type: vec record { TokenType; nat64 };
+  tokens_by_rarity: vec record { Rarity; nat64 };
+};
+
+type BadgeMintingRule = record {
+  token_type: TokenType;
+  condition: text;
+  metadata: TokenMetadata;
+  max_supply: opt nat64;
+};
+
+// Public API Methods
+service : {
+  // NFT Management
+  mint_nft: (MintRequest) -> (variant { Ok: TokenId; Err: NFTError });
+  transfer_nft: (TransferRequest) -> (variant { Ok: bool; Err: NFTError });
+  burn_nft: (BurnRequest) -> (variant { Ok: bool; Err: NFTError });
+  
+  // NFT Queries
+  get_nft: (TokenId) -> (variant { Ok: NFT; Err: NFTError }) query;
+  get_nft_metadata: (TokenId) -> (variant { Ok: TokenMetadata; Err: NFTError }) query;
+  get_nft_owner: (TokenId) -> (variant { Ok: UserId; Err: NFTError }) query;
+  list_nfts: (opt nat64, opt nat64) -> (NFTListResponse) query;
+  
+  // User NFT Management
+  get_user_nfts: (UserId, opt TokenType, opt nat64, opt nat64) -> (UserNFTListResponse) query;
+  get_user_nft_count: (UserId) -> (nat64) query;
+  get_user_tokens_by_type: (UserId, TokenType) -> (vec NFT) query;
+  
+  // Collection Management
+  get_collection_stats: () -> (CollectionStats) query;
+  get_total_supply: () -> (nat64) query;
+  
+  // Badge & Achievement System
+  mint_badge: (UserId, TokenType, text, opt nat64) -> (variant { Ok: TokenId; Err: NFTError });
+  mint_event_attendance_badge: (UserId, nat64) -> (variant { Ok: TokenId; Err: NFTError });
+  
+  // Batch Operations
+  batch_mint: (vec MintRequest) -> (vec variant { Ok: TokenId; Err: NFTError });
+  batch_transfer: (vec TransferRequest) -> (vec variant { Ok: bool; Err: NFTError });
+  
+  // Transfer History
+  get_transfer_history: (TokenId, opt nat64, opt nat64) -> (vec TransferRecord) query;
+  get_user_transfer_history: (UserId, opt nat64, opt nat64) -> (vec TransferRecord) query;
+  
+  // Badge Rules Management
+  add_badge_rule: (BadgeMintingRule) -> (variant { Ok: nat64; Err: NFTError });
+  get_badge_rules: () -> (vec BadgeMintingRule) query;
+  
+  // Health Check
+  health_check: () -> (text) query;
+}

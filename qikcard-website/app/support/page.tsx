@@ -271,7 +271,7 @@ export default function SupportPage() {
                 <div>
                   <Mail className="w-6 h-6 mx-auto mb-2 text-blue-400" />
                   <p className="font-medium">Email</p>
-                  <p className="text-sm">support@theqikcard.com</p>
+                  <p className="text-sm">support@qikcard.com</p>
                 </div>
                 <div>
                   <Phone className="w-6 h-6 mx-auto mb-2 text-green-400" />

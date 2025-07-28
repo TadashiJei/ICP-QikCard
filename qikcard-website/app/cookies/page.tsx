@@ -311,7 +311,7 @@ export default function CookiesPage() {
               </p>
               <div className="space-y-2 text-white/70">
                 <p>
-                  <strong>Email:</strong> privacy@theqikcard.com
+                  <strong>Email:</strong> privacy@qikcard.com
                 </p>
                 <p>
                   <strong>Subject:</strong> Cookie Policy Inquiry

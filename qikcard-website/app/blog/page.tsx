@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description:
       "Discover the latest in Web3 event technology, developer tutorials, and industry insights from QikCard experts.",
     images: ["/MetaSEO-Image.png"],
-    url: "https://theqikcard.com/blog",
+    url: "https://qikcard.com/blog",
   },
   twitter: {
     title: "QikCard Blog - Web3 Events & Developer Insights",

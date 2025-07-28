@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theqikcard.com"),
+  metadataBase: new URL("https://qikcard.com"),
   title: {
     default: "QikCard - Web3 Event Pass, Digital Identity & ICP Hardwallet | Connect, Share, Grow",
     template: "%s | QikCard - Web3 Event Platform",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://theqikcard.com",
+    url: "https://qikcard.com",
     siteName: "QikCard",
     title: "QikCard - Your All-in-One Web3 Event Pass, Digital Identity & ICP Hardwallet",
     description:
@@ -88,9 +88,9 @@ export const metadata: Metadata = {
     yahoo: "your-yahoo-verification-code",
   },
   alternates: {
-    canonical: "https://theqikcard.com",
+    canonical: "https://qikcard.com",
     languages: {
-      "en-US": "https://theqikcard.com",
+      "en-US": "https://qikcard.com",
     },
   },
   category: "technology",
@@ -140,7 +140,6 @@ export const metadata: Metadata = {
     // GitHub specific
     "github:card": "summary_large_image",
   },
-
 }
 
 export default function RootLayout({
@@ -160,8 +159,8 @@ export default function RootLayout({
               "@type": "Organization",
               name: "QikCard",
               description: "Web3 Event Platform with Digital Identity and ICP Hardwallet",
-              url: "https://theqikcard.com",
-              logo: "https://theqikcard.com/MetaSEO-Image.png",
+              url: "https://qikcard.com",
+              logo: "https://qikcard.com/MetaSEO-Image.png",
               sameAs: [
                 "https://twitter.com/QikCard",
                 "https://discord.gg/qikcard",
@@ -173,7 +172,7 @@ export default function RootLayout({
                 "@type": "ContactPoint",
                 telephone: "+63-991-009-7448",
                 contactType: "customer service",
-                email: "support@theqikcard.com",
+                email: "support@qikcard.com",
               },
               address: {
                 "@type": "PostalAddress",
@@ -200,8 +199,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* DNS Prefetch */}
-        <link rel="dns-prefetch" href="//api.theqikcard.com" />
-        <link rel="dns-prefetch" href="//cdn.theqikcard.com" />
+        <link rel="dns-prefetch" href="//api.qikcard.com" />
+        <link rel="dns-prefetch" href="//cdn.qikcard.com" />
       </head>
       <body className={`${inter.className} antialiased`}>
         {children}

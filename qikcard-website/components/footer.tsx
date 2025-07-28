@@ -176,7 +176,7 @@ export default function Footer() {
                 <Mail className="w-5 h-5 text-blue-400" />
                 <div>
                   <p className="text-white/50 text-sm">Email</p>
-                  <p className="text-white">hello@theqikcard.com</p>
+                  <p className="text-white">hello@qikcard.com</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">

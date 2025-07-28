@@ -1,0 +1,211 @@
+// Analytics Canister Interface
+// Provides comprehensive analytics and insights for the QikCard platform
+
+type UserId = principal;
+type EventId = nat64;
+type Timestamp = nat64;
+type QikPointId = text;
+
+type AnalyticsPeriod = variant {
+  Hour;
+  Day;
+  Week;
+  Month;
+  Year;
+};
+
+type MetricType = variant {
+  UserRegistration;
+  EventCreation;
+  EventAttendance;
+  NFTMinting;
+  ProfileUpdates;
+  QikPointUsage;
+  SocialInteractions;
+  Revenue;
+};
+
+type AnalyticsDataPoint = record {
+  timestamp: Timestamp;
+  value: nat64;
+  metric_type: MetricType;
+  dimensions: vec record { text; text };
+};
+
+type TrendData = record {
+  period: AnalyticsPeriod;
+  start_date: Timestamp;
+  end_date: Timestamp;
+  data_points: vec AnalyticsDataPoint;
+  growth_rate: float64;
+  total_value: nat64;
+};
+
+type UserAnalytics = record {
+  user_id: UserId;
+  total_events_attended: nat32;
+  total_events_organized: nat32;
+  total_nfts_owned: nat32;
+  reputation_score: nat64;
+  activity_score: nat64;
+  social_score: nat64;
+  first_activity: Timestamp;
+  last_activity: Timestamp;
+  monthly_activity: vec AnalyticsDataPoint;
+};
+
+type EventAnalytics = record {
+  event_id: EventId;
+  total_attendees: nat32;
+  unique_attendees: nat32;
+  check_in_rate: float64;
+  average_session_duration: nat64;
+  peak_attendance_time: Timestamp;
+  qikpoint_usage: vec record { QikPointId; nat32 };
+  demographic_breakdown: vec record { text; nat32 };
+};
+
+type PlatformStats = record {
+  total_users: nat64;
+  total_events: nat64;
+  total_attendees: nat64;
+  total_nfts_minted: nat64;
+  active_users_24h: nat64;
+  active_users_7d: nat64;
+  active_users_30d: nat64;
+  total_revenue: nat64;
+  average_event_attendance: float64;
+  top_events_by_attendance: vec record { EventId; nat32 };
+  top_organizers_by_events: vec record { UserId; nat32 };
+};
+
+type AnalyticsQuery = record {
+  start_date: Timestamp;
+  end_date: Timestamp;
+  metrics: vec MetricType;
+  dimensions: opt vec text;
+  filters: opt vec record { text; text };
+};
+
+type AnalyticsResponse = record {
+  query: AnalyticsQuery;
+  data: vec AnalyticsDataPoint;
+  summary: record {
+    total_records: nat64;
+    average_value: float64;
+    min_value: nat64;
+    max_value: nat64;
+  };
+};
+
+type RealTimeMetrics = record {
+  active_users: nat64;
+  active_events: nat64;
+  check_ins_last_hour: nat64;
+  nft_mints_last_hour: nat64;
+  new_registrations_last_hour: nat64;
+  system_health: text;
+};
+
+type HeatmapData = record {
+  location: record { lat: float64; lng: float64 };
+  intensity: nat32;
+  event_type: text;
+  timestamp: Timestamp;
+};
+
+type PredictiveInsight = record {
+  prediction_type: text;
+  confidence: float64;
+  predicted_value: nat64;
+  factors: vec record { text; float64 };
+  timeframe: AnalyticsPeriod;
+};
+
+type AnalyticsError = variant {
+  InvalidDateRange;
+  InvalidMetricType;
+  InsufficientData;
+  QueryTooComplex;
+  Unauthorized;
+};
+
+type ExportFormat = variant {
+  CSV;
+  JSON;
+  Parquet;
+};
+
+type ExportRequest = record {
+  query: AnalyticsQuery;
+  format: ExportFormat;
+  include_metadata: bool;
+};
+
+type ExportResponse = record {
+  file_url: text;
+  file_size: nat64;
+  record_count: nat64;
+  generated_at: Timestamp;
+};
+
+// Public API Methods
+service : {
+  // Platform-wide Analytics
+  get_platform_stats: () -> (PlatformStats) query;
+  get_real_time_metrics: () -> (RealTimeMetrics) query;
+  
+  // User Analytics
+  get_user_analytics: (UserId) -> (variant { Ok: UserAnalytics; Err: AnalyticsError }) query;
+  get_user_activity_trend: (UserId, AnalyticsPeriod, Timestamp, Timestamp) -> (variant { Ok: TrendData; Err: AnalyticsError }) query;
+  get_user_ranking: (UserId, text) -> (variant { Ok: nat64; Err: AnalyticsError }) query;
+  
+  // Event Analytics
+  get_event_analytics: (EventId) -> (variant { Ok: EventAnalytics; Err: AnalyticsError }) query;
+  get_event_trend: (EventId, AnalyticsPeriod) -> (variant { Ok: TrendData; Err: AnalyticsError }) query;
+  
+  // Custom Analytics Queries
+  query_analytics: (AnalyticsQuery) -> (variant { Ok: AnalyticsResponse; Err: AnalyticsError }) query;
+  get_trend_data: (MetricType, AnalyticsPeriod, Timestamp, Timestamp) -> (variant { Ok: TrendData; Err: AnalyticsError }) query;
+  
+  // Geographic Analytics
+  get_heatmap_data: (Timestamp, Timestamp, opt text) -> (vec HeatmapData) query;
+  get_location_analytics: (record { lat: float64; lng: float64; radius: float64 }, Timestamp, Timestamp) -> (AnalyticsResponse) query;
+  
+  // Predictive Analytics
+  get_predictive_insights: (MetricType, AnalyticsPeriod) -> (vec PredictiveInsight) query;
+  forecast_event_attendance: (EventId, nat32) -> (variant { Ok: nat32; Err: AnalyticsError }) query;
+  
+  // Comparative Analytics
+  compare_events: (vec EventId, text) -> (AnalyticsResponse) query;
+  compare_users: (vec UserId, text) -> (AnalyticsResponse) query;
+  
+  // Data Export
+  export_analytics: (ExportRequest) -> (variant { Ok: ExportResponse; Err: AnalyticsError });
+  get_export_status: (text) -> (variant { Ok: text; Err: AnalyticsError }) query;
+  
+  // Real-time Monitoring
+  subscribe_to_metrics: (vec MetricType) -> (variant { Ok: text; Err: AnalyticsError });
+  unsubscribe_from_metrics: (text) -> (variant { Ok: bool; Err: AnalyticsError });
+  
+  // Custom Dashboard
+  get_dashboard_data: (UserId) -> (variant { Ok: record {
+    user_analytics: UserAnalytics;
+    platform_stats: PlatformStats;
+    recent_activity: vec AnalyticsDataPoint;
+    recommendations: vec PredictiveInsight;
+  }; Err: AnalyticsError }) query;
+  
+  // Data Management
+  record_event: (MetricType, nat64, vec record { text; text }) -> (variant { Ok: bool; Err: AnalyticsError });
+  batch_record_events: (vec AnalyticsDataPoint) -> (variant { Ok: nat64; Err: AnalyticsError });
+  
+  // Health Check
+  health_check: () -> (text) query;
+  get_system_status: () -> (record {
+    last_update: Timestamp;
+    active_queries: nat64;
+    data_points_count: nat64;
+    system_load: float64;
+  }) query;
+}

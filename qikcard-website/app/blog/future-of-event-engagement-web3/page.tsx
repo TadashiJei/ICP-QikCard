@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "event industry future",
     "QikCard technology",
   ],
-  authors: [{ name: "Alex Chen", url: "https://theqikcard.com/team/alex-chen" }],
+  authors: [{ name: "Alex Chen", url: "https://qikcard.com/team/alex-chen" }],
   openGraph: {
     title: "The Future of Event Engagement: Web3 Meets Physical Experiences",
     description:
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         alt: "Web3 Events Future - QikCard Blog",
       },
     ],
-    url: "https://theqikcard.com/blog/future-of-event-engagement-web3",
+    url: "https://qikcard.com/blog/future-of-event-engagement-web3",
     type: "article",
     publishedTime: "2025-01-15T00:00:00.000Z",
     authors: ["Alex Chen"],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     creator: "@QikCard",
   },
   alternates: {
-    canonical: "https://theqikcard.com/blog/future-of-event-engagement-web3",
+    canonical: "https://qikcard.com/blog/future-of-event-engagement-web3",
   },
 }
 
@@ -62,7 +62,7 @@ export default function BlogPost() {
             headline: "The Future of Event Engagement: Web3 Meets Physical Experiences",
             description:
               "Explore how blockchain technology is revolutionizing the events industry and creating new opportunities for meaningful participant engagement.",
-            image: "https://theqikcard.com/MetaSEO-Image.png",
+            image: "https://qikcard.com/MetaSEO-Image.png",
             author: {
               "@type": "Person",
               name: "Alex Chen",
@@ -77,14 +77,14 @@ export default function BlogPost() {
               name: "QikCard",
               logo: {
                 "@type": "ImageObject",
-                url: "https://theqikcard.com/MetaSEO-Image.png",
+                url: "https://qikcard.com/MetaSEO-Image.png",
               },
             },
             datePublished: "2025-01-15T00:00:00.000Z",
             dateModified: "2025-01-15T00:00:00.000Z",
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": "https://theqikcard.com/blog/future-of-event-engagement-web3",
+              "@id": "https://qikcard.com/blog/future-of-event-engagement-web3",
             },
             keywords: "Web3, Events, Blockchain, NFT tickets, Digital identity, Event technology",
             articleSection: "Industry Insights",

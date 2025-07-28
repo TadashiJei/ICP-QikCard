@@ -1,0 +1,173 @@
+// Event Canister Interface
+// Manages event lifecycle, attendance tracking, and QikPoint scanner integration
+
+type EventId = nat64;
+type UserId = principal;
+type Timestamp = nat64;
+type QikPointId = text;
+
+type EventStatus = variant {
+  Draft;
+  Active;
+  Completed;
+  Cancelled;
+  Postponed;
+};
+
+type EventType = variant {
+  Conference;
+  Workshop;
+  Meetup;
+  Webinar;
+  Hackathon;
+  Networking;
+  Other;
+};
+
+type Location = record {
+  name: text;
+  address: text;
+  coordinates: record { lat: float64; lng: float64 };
+  capacity: opt nat32;
+};
+
+type Event = record {
+  id: EventId;
+  title: text;
+  description: text;
+  event_type: EventType;
+  organizer_id: UserId;
+  start_time: Timestamp;
+  end_time: Timestamp;
+  location: Location;
+  max_attendees: opt nat32;
+  status: EventStatus;
+  qr_code: text;
+  nfc_tag: text;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  metadata: opt blob;
+};
+
+type AttendanceRecord = record {
+  id: nat64;
+  event_id: EventId;
+  user_id: UserId;
+  check_in_time: Timestamp;
+  check_out_time: opt Timestamp;
+  scanner_id: QikPointId;
+  verified: bool;
+};
+
+type QikPointDevice = record {
+  id: QikPointId;
+  name: text;
+  location: text;
+  owner_id: UserId;
+  is_active: bool;
+  last_seen: Timestamp;
+  metadata: opt blob;
+};
+
+type EventError = variant {
+  EventNotFound;
+  Unauthorized;
+  InvalidTimeRange;
+  MaxAttendeesExceeded;
+  EventAlreadyStarted;
+  EventAlreadyEnded;
+  InvalidStatus;
+  ScannerNotFound;
+  AlreadyCheckedIn;
+  NotCheckedIn;
+};
+
+type CreateEventRequest = record {
+  title: text;
+  description: text;
+  event_type: EventType;
+  start_time: Timestamp;
+  end_time: Timestamp;
+  location: Location;
+  max_attendees: opt nat32;
+  metadata: opt blob;
+};
+
+type UpdateEventRequest = record {
+  title: opt text;
+  description: opt text;
+  start_time: opt Timestamp;
+  end_time: opt Timestamp;
+  location: opt Location;
+  max_attendees: opt nat32;
+  status: opt EventStatus;
+  metadata: opt blob;
+};
+
+type CheckInRequest = record {
+  event_id: EventId;
+  user_id: UserId;
+  scanner_id: QikPointId;
+};
+
+type CheckOutRequest = record {
+  event_id: EventId;
+  user_id: UserId;
+  scanner_id: QikPointId;
+};
+
+type EventListResponse = record {
+  events: vec Event;
+  total_count: nat64;
+  has_more: bool;
+};
+
+type AttendanceListResponse = record {
+  records: vec AttendanceRecord;
+  total_count: nat64;
+  has_more: bool;
+};
+
+type QikPointListResponse = record {
+  devices: vec QikPointDevice;
+  total_count: nat64;
+};
+
+// Public API Methods
+service : {
+  // Event Management
+  create_event: (CreateEventRequest) -> (variant { Ok: Event; Err: EventError });
+  get_event: (EventId) -> (variant { Ok: Event; Err: EventError }) query;
+  update_event: (EventId, UpdateEventRequest) -> (variant { Ok: Event; Err: EventError });
+  delete_event: (EventId) -> (variant { Ok: bool; Err: EventError });
+  
+  // Event Listing
+  list_events: (opt EventStatus, opt nat64, opt nat64) -> (EventListResponse) query;
+  list_user_events: (UserId, opt EventStatus, opt nat64, opt nat64) -> (EventListResponse) query;
+  search_events: (text, opt nat64, opt nat64) -> (EventListResponse) query;
+  
+  // Attendance Management
+  check_in: (CheckInRequest) -> (variant { Ok: AttendanceRecord; Err: EventError });
+  check_out: (CheckOutRequest) -> (variant { Ok: AttendanceRecord; Err: EventError });
+  get_attendance: (EventId, UserId) -> (variant { Ok: opt AttendanceRecord; Err: EventError }) query;
+  list_attendees: (EventId, opt nat64, opt nat64) -> (AttendanceListResponse) query;
+  get_event_attendance_count: (EventId) -> (variant { Ok: nat64; Err: EventError }) query;
+  
+  // QikPoint Device Management
+  register_qikpoint: (text, text, opt blob) -> (variant { Ok: QikPointDevice; Err: EventError });
+  update_qikpoint: (QikPointId, record {
+    name: opt text;
+    location: opt text;
+    is_active: opt bool;
+    metadata: opt blob;
+  }) -> (variant { Ok: QikPointDevice; Err: EventError });
+  get_qikpoint: (QikPointId) -> (variant { Ok: QikPointDevice; Err: EventError }) query;
+  list_qikpoints: (opt bool) -> (QikPointListResponse) query;
+  
+  // Event Verification
+  verify_attendance: (EventId, UserId) -> (variant { Ok: bool; Err: EventError }) query;
+  generate_event_codes: (EventId) -> (variant { Ok: record { qr_code: text; nfc_tag: text }; Err: EventError });
+  
+  // Health Check
+  health_check: () -> (text) query;
+}

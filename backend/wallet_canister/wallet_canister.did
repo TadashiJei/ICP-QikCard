@@ -1,0 +1,255 @@
+// Wallet Canister Interface
+// Manages user wallets, QikPoints, and payment processing
+
+type UserId = principal;
+type WalletId = nat64;
+type TransactionId = nat64;
+type Timestamp = nat64;
+
+type TokenType = variant {
+  ICP;
+  QikPoint;
+  Custom: text;
+};
+
+type TransactionType = variant {
+  Deposit;
+  Withdrawal;
+  Transfer;
+  Payment;
+  Reward;
+  Refund;
+  Fee;
+};
+
+type TransactionStatus = variant {
+  Pending;
+  Completed;
+  Failed;
+  Cancelled;
+  Refunded;
+};
+
+type Wallet = record {
+  id: WalletId;
+  user_id: UserId;
+  balances: vec record { TokenType; nat64 };
+  total_deposits: nat64;
+  total_withdrawals: nat64;
+  transaction_count: nat64;
+  is_active: bool;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  metadata: opt blob;
+};
+
+type Transaction = record {
+  id: TransactionId;
+  wallet_id: WalletId;
+  transaction_type: TransactionType;
+  token_type: TokenType;
+  amount: nat64;
+  from_address: opt text;
+  to_address: opt text;
+  status: TransactionStatus;
+  metadata: opt blob;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  block_height: opt nat64;
+  memo: opt text;
+};
+
+type PaymentRequest = record {
+  recipient: UserId;
+  amount: nat64;
+  token_type: TokenType;
+  description: text;
+  expires_at: opt Timestamp;
+  metadata: opt blob;
+};
+
+type PaymentResponse = record {
+  payment_id: nat64;
+  payment_url: text;
+  qr_code: text;
+  expires_at: Timestamp;
+};
+
+type WalletError = variant {
+  WalletNotFound;
+  InsufficientBalance;
+  InvalidAmount;
+  InvalidToken;
+  TransactionFailed;
+  Unauthorized;
+  PaymentExpired;
+  PaymentAlreadyProcessed;
+  InvalidRecipient;
+  DailyLimitExceeded;
+  MonthlyLimitExceeded;
+};
+
+type DepositRequest = record {
+  token_type: TokenType;
+  amount: nat64;
+  from_address: text;
+  memo: opt text;
+};
+
+type WithdrawalRequest = record {
+  token_type: TokenType;
+  amount: nat64;
+  to_address: text;
+  memo: opt text;
+};
+
+type TransferRequest = record {
+  from_wallet: WalletId;
+  to_user: UserId;
+  token_type: TokenType;
+  amount: nat64;
+  memo: opt text;
+};
+
+type WalletListResponse = record {
+  wallets: vec Wallet;
+  total_count: nat64;
+};
+
+type TransactionListResponse = record {
+  transactions: vec Transaction;
+  total_count: nat64;
+  has_more: bool;
+};
+
+type BalanceResponse = record {
+  token_type: TokenType;
+  balance: nat64;
+  pending_balance: nat64;
+  available_balance: nat64;
+};
+
+type WalletStats = record {
+  total_wallets: nat64;
+  total_transactions: nat64;
+  total_volume: nat64;
+  average_balance: nat64;
+  active_wallets_24h: nat64;
+  top_holders: vec record { UserId; nat64 };
+};
+
+type SpendingLimit = record {
+  daily_limit: nat64;
+  monthly_limit: nat64;
+  current_daily_usage: nat64;
+  current_monthly_usage: nat64;
+  resets_at: Timestamp;
+};
+
+type RewardRequest = record {
+  recipient: UserId;
+  amount: nat64;
+  reason: text;
+  event_id: opt nat64;
+  metadata: opt blob;
+};
+
+type ExchangeRate = record {
+  from_token: TokenType;
+  to_token: TokenType;
+  rate: float64;
+  last_updated: Timestamp;
+};
+
+type WalletNotification = record {
+  id: nat64;
+  user_id: UserId;
+  type: text;
+  title: text;
+  message: text;
+  amount: opt nat64;
+  transaction_id: opt TransactionId;
+  created_at: Timestamp;
+  read: bool;
+};
+
+// Public API Methods
+service : {
+  // Wallet Management
+  create_wallet: (opt blob) -> (variant { Ok: Wallet; Err: WalletError });
+  get_wallet: (WalletId) -> (variant { Ok: Wallet; Err: WalletError }) query;
+  get_user_wallet: (UserId) -> (variant { Ok: Wallet; Err: WalletError }) query;
+  update_wallet_metadata: (WalletId, blob) -> (variant { Ok: Wallet; Err: WalletError });
+  
+  // Balance Management
+  get_balance: (WalletId, TokenType) -> (variant { Ok: BalanceResponse; Err: WalletError }) query;
+  get_all_balances: (WalletId) -> (vec BalanceResponse) query;
+  get_total_balance: (WalletId) -> (nat64) query;
+  
+  // Transaction Management
+  deposit: (DepositRequest) -> (variant { Ok: Transaction; Err: WalletError });
+  withdraw: (WithdrawalRequest) -> (variant { Ok: Transaction; Err: WalletError });
+  transfer: (TransferRequest) -> (variant { Ok: Transaction; Err: WalletError });
+  
+  // Payment Processing
+  create_payment_request: (PaymentRequest) -> (variant { Ok: PaymentResponse; Err: WalletError });
+  process_payment: (nat64) -> (variant { Ok: Transaction; Err: WalletError });
+  verify_payment: (nat64) -> (variant { Ok: bool; Err: WalletError }) query;
+  
+  // Reward System
+  mint_qikpoints: (RewardRequest) -> (variant { Ok: Transaction; Err: WalletError });
+  distribute_rewards: (vec RewardRequest) -> (vec variant { Ok: Transaction; Err: WalletError });
+  
+  // Transaction History
+  get_transaction: (TransactionId) -> (variant { Ok: Transaction; Err: WalletError }) query;
+  get_user_transactions: (UserId, opt TransactionType, opt nat64, opt nat64) -> (TransactionListResponse) query;
+  get_wallet_transactions: (WalletId, opt nat64, opt nat64) -> (TransactionListResponse) query;
+  
+  // Spending Limits
+  get_spending_limits: (WalletId) -> (SpendingLimit) query;
+  update_spending_limits: (WalletId, SpendingLimit) -> (variant { Ok: SpendingLimit; Err: WalletError });
+  
+  // Exchange & Conversion
+  get_exchange_rate: (TokenType, TokenType) -> (variant { Ok: ExchangeRate; Err: WalletError }) query;
+  convert_tokens: (WalletId, TokenType, TokenType, nat64) -> (variant { Ok: Transaction; Err: WalletError });
+  
+  // Batch Operations
+  batch_transfer: (vec TransferRequest) -> (vec variant { Ok: Transaction; Err: WalletError });
+  batch_deposit: (vec DepositRequest) -> (vec variant { Ok: Transaction; Err: WalletError });
+  
+  // Wallet Statistics
+  get_wallet_stats: () -> (WalletStats) query;
+  get_user_stats: (UserId) -> (record {
+    total_deposits: nat64;
+    total_withdrawals: nat64;
+    total_transfers: nat64;
+    average_transaction: float64;
+    largest_transaction: nat64;
+  }) query;
+  
+  // Notifications
+  get_notifications: (UserId, opt bool, opt nat64, opt nat64) -> (vec WalletNotification) query;
+  mark_notification_read: (nat64) -> (variant { Ok: bool; Err: WalletError });
+  
+  // QR Code Generation
+  generate_qr_code: (PaymentRequest) -> (variant { Ok: text; Err: WalletError }) query;
+  scan_qr_code: (text) -> (variant { Ok: PaymentRequest; Err: WalletError }) query;
+  
+  // Webhook Integration
+  register_webhook: (text, text) -> (variant { Ok: nat64; Err: WalletError });
+  remove_webhook: (nat64) -> (variant { Ok: bool; Err: WalletError });
+  
+  // Admin Functions
+  admin_mint: (UserId, TokenType, nat64, text) -> (variant { Ok: Transaction; Err: WalletError });
+  admin_burn: (UserId, TokenType, nat64, text) -> (variant { Ok: Transaction; Err: WalletError });
+  set_exchange_rate: (TokenType, TokenType, float64) -> (variant { Ok: bool; Err: WalletError });
+  
+  // Health Check
+  health_check: () -> (text) query;
+  get_system_status: () -> (record {
+    total_wallets: nat64;
+    active_transactions: nat64;
+    system_balance: nat64;
+    last_processed_block: nat64;
+  }) query;
+}

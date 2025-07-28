@@ -1,0 +1,100 @@
+// Authentication Canister Interface
+// Manages user authentication, sessions, and role-based access control
+
+type UserId = principal;
+type SessionId = text;
+type Timestamp = nat64;
+
+type UserRole = variant {
+  Admin;
+  Organizer;
+  Attendee;
+  Scanner;
+};
+
+type UserProfile = record {
+  id: UserId;
+  display_name: text;
+  email: text;
+  roles: vec UserRole;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  is_active: bool;
+  metadata: opt blob;
+};
+
+type Session = record {
+  id: SessionId;
+  user_id: UserId;
+  device_info: text;
+  created_at: Timestamp;
+  expires_at: Timestamp;
+  is_valid: bool;
+};
+
+type AuthError = variant {
+  Unauthorized;
+  InvalidSession;
+  SessionExpired;
+  UserNotFound;
+  InvalidCredentials;
+  PermissionDenied;
+  AlreadyRegistered;
+};
+
+type RegisterUserRequest = record {
+  display_name: text;
+  email: text;
+};
+
+type LoginRequest = record {
+  device_info: text;
+};
+
+type ValidateSessionResponse = variant {
+  Ok: record {
+    user_id: UserId;
+    roles: vec UserRole;
+    expires_at: Timestamp;
+  };
+  Err: AuthError;
+};
+
+type PermissionCheckResponse = variant {
+  Ok: bool;
+  Err: AuthError;
+};
+
+type UserListResponse = record {
+  users: vec UserProfile;
+  total_count: nat64;
+};
+
+// Public API Methods
+service : {
+  // User Management
+  register_user: (RegisterUserRequest) -> (variant { Ok: UserProfile; Err: AuthError });
+  get_user: (UserId) -> (variant { Ok: UserProfile; Err: AuthError }) query;
+  get_user_by_principal: (principal) -> (variant { Ok: UserProfile; Err: AuthError }) query;
+  update_user_profile: (UserId, record {
+    display_name: opt text;
+    email: opt text;
+    metadata: opt blob;
+  }) -> (variant { Ok: UserProfile; Err: AuthError });
+  
+  // Session Management
+  login: (LoginRequest) -> (variant { Ok: Session; Err: AuthError });
+  logout: (SessionId) -> (variant { Ok: bool; Err: AuthError });
+  validate_session: (SessionId) -> (ValidateSessionResponse) query;
+  
+  // Role Management
+  has_permission: (UserId, text) -> (PermissionCheckResponse) query;
+  assign_role: (UserId, UserRole) -> (variant { Ok: bool; Err: AuthError });
+  remove_role: (UserId, UserRole) -> (variant { Ok: bool; Err: AuthError });
+  
+  // User Listing (Admin only)
+  list_users: (opt nat64, opt nat64) -> (UserListResponse) query;
+  
+  // Health Check
+  health_check: () -> (text) query;
+}
