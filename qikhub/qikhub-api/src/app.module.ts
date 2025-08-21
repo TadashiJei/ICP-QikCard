@@ -8,6 +8,9 @@ import { EventsModule } from './events/events.module';
 import { IcpModule } from './icp/icp.module';
 import { UsersModule } from './users/users.module';
 import { ParticipantsModule } from './participants/participants.module';
+import { DevicesModule } from './devices/devices.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { CheckinsModule } from './checkins/checkins.module';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { ParticipantsModule } from './participants/participants.module';
     IcpModule,
     UsersModule,
     ParticipantsModule,
+    DevicesModule,
+    NotificationsModule,
+    CheckinsModule,
   ],
   controllers: [AppController],
   providers: [AppService, WsGateway],
