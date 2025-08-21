@@ -1,0 +1,48 @@
+name: qikhub-api CI
+
+on:
+  push:
+    paths:
+      - 'qikhub/qikhub-api/**'
+      - '.github/workflows/qikhub-api-ci.yml'
+  pull_request:
+    paths:
+      - 'qikhub/qikhub-api/**'
+      - '.github/workflows/qikhub-api-ci.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: qikhub/qikhub-api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: qikhub/qikhub-api/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Build
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm test -- --runInBand
+
+      - name: Run e2e tests
+        run: npm run test:e2e -- --runInBand
