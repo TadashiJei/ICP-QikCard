@@ -2,7 +2,9 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CheckinsService } from './checkins.service';
 import { CreateCheckInDto } from './dto/create-checkin.dto';
 import { CheckOutDto } from './dto/checkout.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('checkins')
 @Controller('checkins')
 export class CheckinsController {
   constructor(private readonly checkinsService: CheckinsService) {}
