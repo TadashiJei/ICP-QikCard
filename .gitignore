@@ -11,6 +11,7 @@ yarn-error.log*
 /frontend/.next/
 /qikhub/build/
 /qikhub/dist/
+/qikhub/qikhub-api/dist/
 
 # Environment variables
 .env
