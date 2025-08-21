@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { DevicePingDto } from './dto/ping.dto';
 
 @Injectable()
 export class DevicesService {
@@ -18,25 +19,32 @@ export class DevicesService {
     }
   }
 
-  create(dto: CreateDeviceDto) {
-    return this.prisma.qikPointDevice.create({
-      data: {
-        name: dto.name,
-        deviceType: dto.deviceType as any,
-        deviceId: dto.deviceId,
-        status: (dto.status as any) ?? undefined,
-        locationName: dto.locationName,
-        locationLat: dto.locationLat ?? undefined,
-        locationLng: dto.locationLng ?? undefined,
-        firmwareVersion: dto.firmwareVersion,
-        batteryLevel: dto.batteryLevel ?? undefined,
-        signalStrength: dto.signalStrength ?? undefined,
-        isOnline: dto.isOnline ?? undefined,
-        ownerId: dto.ownerId,
-        eventId: dto.eventId ?? undefined,
-        configuration: this.parseConfiguration(dto.configuration),
-      },
-    });
+  async create(dto: CreateDeviceDto) {
+    try {
+      return await this.prisma.qikPointDevice.create({
+        data: {
+          name: dto.name,
+          deviceType: dto.deviceType as any,
+          deviceId: dto.deviceId,
+          status: (dto.status as any) ?? undefined,
+          locationName: dto.locationName,
+          locationLat: dto.locationLat ?? undefined,
+          locationLng: dto.locationLng ?? undefined,
+          firmwareVersion: dto.firmwareVersion,
+          batteryLevel: dto.batteryLevel ?? undefined,
+          signalStrength: dto.signalStrength ?? undefined,
+          isOnline: dto.isOnline ?? undefined,
+          ownerId: dto.ownerId,
+          eventId: dto.eventId ?? undefined,
+          configuration: this.parseConfiguration(dto.configuration),
+        },
+      });
+    } catch (e: any) {
+      if (e && e.code === 'P2002') {
+        throw new ConflictException('deviceId must be unique');
+      }
+      throw e;
+    }
   }
 
   findAll(filters?: { ownerId?: string; eventId?: string }) {
@@ -106,6 +114,24 @@ export class DevicesService {
   async unassignEvent(id: string) {
     try {
       return await this.prisma.qikPointDevice.update({ where: { id }, data: { eventId: null } });
+    } catch (e) {
+      throw new NotFoundException('Device not found');
+    }
+  }
+
+  async ping(id: string, dto: DevicePingDto) {
+    const now = new Date();
+    try {
+      return await this.prisma.qikPointDevice.update({
+        where: { id },
+        data: {
+          lastSeen: now,
+          batteryLevel: dto.batteryLevel ?? undefined,
+          signalStrength: dto.signalStrength ?? undefined,
+          isOnline: dto.isOnline ?? undefined,
+          healthData: dto.healthData ? this.parseConfiguration(dto.healthData) : undefined,
+        },
+      });
     } catch (e) {
       throw new NotFoundException('Device not found');
     }

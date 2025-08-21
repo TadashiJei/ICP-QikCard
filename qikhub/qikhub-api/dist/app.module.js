@@ -17,6 +17,9 @@ const events_module_1 = require("./events/events.module");
 const icp_module_1 = require("./icp/icp.module");
 const users_module_1 = require("./users/users.module");
 const participants_module_1 = require("./participants/participants.module");
+const devices_module_1 = require("./devices/devices.module");
+const notifications_module_1 = require("./notifications/notifications.module");
+const checkins_module_1 = require("./checkins/checkins.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,6 +32,9 @@ exports.AppModule = AppModule = __decorate([
             icp_module_1.IcpModule,
             users_module_1.UsersModule,
             participants_module_1.ParticipantsModule,
+            devices_module_1.DevicesModule,
+            notifications_module_1.NotificationsModule,
+            checkins_module_1.CheckinsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, ws_gateway_1.WsGateway],

@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { DevicePingDto } from './dto/ping.dto';
 
 @Controller('devices')
 export class DevicesController {
@@ -50,5 +51,10 @@ export class DevicesController {
   @Post(':id/unassign-event')
   unassignEvent(@Param('id') id: string) {
     return this.devicesService.unassignEvent(id);
+  }
+
+  @Post(':id/ping')
+  ping(@Param('id') id: string, @Body() dto: DevicePingDto) {
+    return this.devicesService.ping(id, dto);
   }
 }
