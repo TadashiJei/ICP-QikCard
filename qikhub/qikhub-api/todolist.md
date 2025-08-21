@@ -1,18 +1,18 @@
 # QikHub API – Task Tracker
 
-Updated: 2025-08-22 01:33 (+08:00)
+Updated: 2025-08-22 01:59 (+08:00)
 
 ## Completed
 - [x] Devices: POST /devices/:id/ping — update lastSeen, batteryLevel, signalStrength, isOnline, healthData
 - [x] Devices: create() returns 409 on duplicate deviceId (unique constraint)
 - [x] Notifications module (CRUD) wired into AppModule
 - [x] Check-Ins module (check-in/out/list) wired into AppModule; updates participant status and emits notifications
+- [x] Swagger/OpenAPI docs at /docs
 
 ## In Progress
 - [ ] None (next items below)
 
 ## Next
-- [ ] Add Swagger/OpenAPI docs for Devices, Checkins, Notifications for easy testing
 - [ ] Add e2e tests covering devices → check-in/out → notifications flows
 - [ ] Device health: optional periodic telemetry aggregation (simple counters)
 
