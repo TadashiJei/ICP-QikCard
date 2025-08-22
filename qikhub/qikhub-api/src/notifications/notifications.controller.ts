@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('notifications')
 @Controller('notifications')
@@ -10,9 +10,23 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @Get()
-  findAll(@Query('userId') userId?: string) {
-    if (userId) return this.notificationsService.findByUser(userId);
-    return this.notificationsService.findAll();
+  @ApiOperation({ summary: 'List notifications with pagination and filters' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'pageSize', required: false, example: 20 })
+  @ApiQuery({ name: 'userId', required: false })
+  @ApiQuery({ name: 'isRead', required: false, type: Boolean })
+  @ApiQuery({ name: 'type', required: false, enum: ['INFO', 'WARNING', 'ERROR', 'SUCCESS'] })
+  findAll(
+    @Query('page') page = '1',
+    @Query('pageSize') pageSize = '20',
+    @Query('userId') userId?: string,
+    @Query('isRead') isRead?: string,
+    @Query('type') type?: 'INFO' | 'WARNING' | 'ERROR' | 'SUCCESS',
+  ) {
+    const pageNum = Math.max(parseInt(page as string, 10) || 1, 1);
+    const sizeNum = Math.min(Math.max(parseInt(pageSize as string, 10) || 20, 1), 100);
+    const isReadBool = typeof isRead === 'string' ? isRead === 'true' : undefined;
+    return this.notificationsService.findPaginated({ userId, isRead: isReadBool, type, page: pageNum, pageSize: sizeNum });
   }
 
   @Get(':id')

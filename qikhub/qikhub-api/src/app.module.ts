@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,6 +18,15 @@ import { CheckinsModule } from './checkins/checkins.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    // Basic app-wide rate limiting (can be overridden per-route with @Throttle)
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 60,
+      },
+    ]),
+    // Scheduling for background heartbeats
+    ScheduleModule.forRoot(),
     PrismaModule,
     EventsModule,
     IcpModule,
@@ -25,6 +37,10 @@ import { CheckinsModule } from './checkins/checkins.module';
     CheckinsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, WsGateway],
+  providers: [
+    AppService,
+    WsGateway,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+  ],
 })
 export class AppModule {}

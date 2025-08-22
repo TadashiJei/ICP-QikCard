@@ -31,12 +31,31 @@ export class NotificationsService {
     });
   }
 
-  findAll() {
-    return this.prisma.notification.findMany({ orderBy: { createdAt: 'desc' } });
-  }
+  async findPaginated(params: {
+    userId?: string;
+    isRead?: boolean;
+    type?: 'INFO' | 'WARNING' | 'ERROR' | 'SUCCESS';
+    page: number;
+    pageSize: number;
+  }) {
+    const { userId, isRead, type, page, pageSize } = params;
+    const where: Prisma.NotificationWhereInput = {
+      ...(userId ? { userId } : {}),
+      ...(typeof isRead === 'boolean' ? { isRead } : {}),
+      ...(type ? { type: type as any } : {}),
+    };
 
-  findByUser(userId: string) {
-    return this.prisma.notification.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } });
+    const [total, data] = await this.prisma.$transaction([
+      this.prisma.notification.count({ where }),
+      this.prisma.notification.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+
+    return { data, total, page, pageSize };
   }
 
   async findOne(id: string) {

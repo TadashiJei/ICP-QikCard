@@ -112,11 +112,31 @@ export class CheckinsService {
     return { success: true };
   }
 
-  listByEvent(eventId: string) {
-    return this.prisma.checkIn.findMany({ where: { eventId }, orderBy: { checkInTime: 'desc' } });
+  async listByEvent(eventId: string, page = 1, pageSize = 20) {
+    const where: Prisma.CheckInWhereInput = { eventId };
+    const [total, data] = await this.prisma.$transaction([
+      this.prisma.checkIn.count({ where }),
+      this.prisma.checkIn.findMany({
+        where,
+        orderBy: { checkInTime: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+    return { data, total, page, pageSize };
   }
 
-  listByParticipant(participantId: string) {
-    return this.prisma.checkIn.findMany({ where: { participantId }, orderBy: { checkInTime: 'desc' } });
+  async listByParticipant(participantId: string, page = 1, pageSize = 20) {
+    const where: Prisma.CheckInWhereInput = { participantId };
+    const [total, data] = await this.prisma.$transaction([
+      this.prisma.checkIn.count({ where }),
+      this.prisma.checkIn.findMany({
+        where,
+        orderBy: { checkInTime: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+    return { data, total, page, pageSize };
   }
 }
