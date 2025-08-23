@@ -17,6 +17,4 @@ sha2 = "0.10"
 hex = "0.4"
 chrono = { version = "0.4", features = ["serde"] }
 
-[dependencies.ic-ledger-types]
-version = "0.8"
-features = ["icrc1"]
+ic-ledger-types = "0.8"
