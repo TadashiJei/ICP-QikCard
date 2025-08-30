@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CheckinsService } from './checkins.service';
 import { CreateCheckInDto } from './dto/create-checkin.dto';
 import { CheckOutDto } from './dto/checkout.dto';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('checkins')
 @Controller('checkins')
@@ -25,6 +25,50 @@ export class CheckinsController {
   @ApiOperation({ summary: 'List check-ins by event with pagination' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'pageSize', required: false, example: 20 })
+  @ApiOkResponse({
+    description: 'Paginated check-ins by event',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              checkInTime: { type: 'string', format: 'date-time' },
+              checkOutTime: { type: 'string', format: 'date-time', nullable: true },
+              eventId: { type: 'string' },
+              participantId: { type: 'string' },
+              userId: { type: 'string' },
+              deviceId: { type: 'string', nullable: true },
+              metadata: { type: 'object', nullable: true },
+            },
+          },
+        },
+        total: { type: 'number', example: 1 },
+        page: { type: 'number', example: 1 },
+        pageSize: { type: 'number', example: 20 },
+      },
+      example: {
+        data: [
+          {
+            id: 'c1',
+            checkInTime: '2025-01-01T12:00:00.000Z',
+            checkOutTime: null,
+            eventId: 'event_1',
+            participantId: 'p1',
+            userId: 'u1',
+            deviceId: null,
+            metadata: null,
+          },
+        ],
+        total: 1,
+        page: 1,
+        pageSize: 20,
+      },
+    },
+  })
   listByEvent(
     @Param('eventId') eventId: string,
     @Query('page') page = '1',
@@ -39,6 +83,50 @@ export class CheckinsController {
   @ApiOperation({ summary: 'List check-ins by participant with pagination' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'pageSize', required: false, example: 20 })
+  @ApiOkResponse({
+    description: 'Paginated check-ins by participant',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              checkInTime: { type: 'string', format: 'date-time' },
+              checkOutTime: { type: 'string', format: 'date-time', nullable: true },
+              eventId: { type: 'string' },
+              participantId: { type: 'string' },
+              userId: { type: 'string' },
+              deviceId: { type: 'string', nullable: true },
+              metadata: { type: 'object', nullable: true },
+            },
+          },
+        },
+        total: { type: 'number', example: 1 },
+        page: { type: 'number', example: 1 },
+        pageSize: { type: 'number', example: 20 },
+      },
+      example: {
+        data: [
+          {
+            id: 'c2',
+            checkInTime: '2025-01-01T12:00:00.000Z',
+            checkOutTime: '2025-01-01T12:30:00.000Z',
+            eventId: 'event_1',
+            participantId: 'p1',
+            userId: 'u1',
+            deviceId: 'dev1',
+            metadata: { note: 'left early' },
+          },
+        ],
+        total: 1,
+        page: 1,
+        pageSize: 20,
+      },
+    },
+  })
   listByParticipant(
     @Param('participantId') participantId: string,
     @Query('page') page = '1',

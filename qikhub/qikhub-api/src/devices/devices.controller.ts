@@ -70,7 +70,7 @@ export class DevicesController {
   @Post(':id/ping')
   @ApiOperation({ summary: 'Device health ping (updates telemetry and lastSeen)' })
   @ApiResponse({ status: 201, description: 'Ping accepted; device updated' })
-  @Throttle({ limit: 10, ttl: 60_000 })
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   ping(@Param('id') id: string, @Body() dto: DevicePingDto) {
     return this.devicesService.ping(id, dto);
   }

@@ -3,6 +3,8 @@ import { Prisma, } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { PaginationDto, PaginatedResponseDto } from '../common/dto/pagination.dto';
+import { EventFilterDto } from '../common/dto/filter.dto';
 
 @Injectable()
 export class EventsService {
@@ -40,6 +42,68 @@ export class EventsService {
     return this.prisma.event.findMany({
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async findAllPaginated(pagination: PaginationDto, filters: EventFilterDto) {
+    const { page = 1, pageSize = 20 } = pagination;
+    const { search, status, organizerId, startDateFrom, startDateTo, sortBy = 'startDate', sortOrder = 'desc' } = filters;
+
+    const where: Prisma.EventWhereInput = {};
+
+    // Apply filters
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { venueName: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (organizerId) {
+      where.organizerId = organizerId;
+    }
+
+    if (startDateFrom || startDateTo) {
+      where.startDate = {};
+      if (startDateFrom) {
+        where.startDate.gte = new Date(startDateFrom);
+      }
+      if (startDateTo) {
+        where.startDate.lte = new Date(startDateTo);
+      }
+    }
+
+    // Build order by
+    const orderBy: Prisma.EventOrderByWithRelationInput = {};
+    if (sortBy && ['createdAt', 'updatedAt', 'name', 'startDate', 'endDate'].includes(sortBy)) {
+      orderBy[sortBy as keyof Prisma.EventOrderByWithRelationInput] = sortOrder;
+    } else {
+      orderBy.startDate = sortOrder;
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.event.findMany({
+        where,
+        orderBy,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        include: {
+          organizer: {
+            select: { id: true, displayName: true, email: true },
+          },
+          _count: {
+            select: { participants: true, devices: true },
+          },
+        },
+      }),
+      this.prisma.event.count({ where }),
+    ]);
+
+    return new PaginatedResponseDto(data, total, page, pageSize);
   }
 
   async findOne(id: string) {
