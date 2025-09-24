@@ -117,3 +117,5 @@ debug.log
 # Cache
 .cache/
 .parcel-cache/
+
+archivedd/
